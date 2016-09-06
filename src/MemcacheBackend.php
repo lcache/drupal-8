@@ -10,7 +10,6 @@ namespace Drupal\memcache;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheTagsChecksumInterface;
-use Drupal\Core\Lock\LockBackendInterface;
 
 /**
  * Defines a Memcache cache backend.
@@ -25,25 +24,11 @@ class MemcacheBackend implements CacheBackendInterface {
   protected $bin;
 
   /**
-   * The lock count.
-   *
-   * @var int
-   */
-  protected $lockCount = 0;
-
-  /**
    * The memcache wrapper object.
    *
    * @var \Drupal\memcache\DrupalMemcacheInterface
    */
   protected $memcache;
-
-  /**
-   * The lock backend that should be used.
-   *
-   * @var \Drupal\Core\Lock\LockBackendInterface
-   */
-  protected $lock;
 
   /**
    * The Settings instance.
@@ -66,17 +51,14 @@ class MemcacheBackend implements CacheBackendInterface {
    *   The bin name.
    * @param \Drupal\memcache\DrupalMemcacheInterface $memcache
    *   The memcache object.
-   * @param \Drupal\Core\Lock\LockBackendInterface $lock
-   *   The lock backend.
    * @param \Drupal\memcache\DrupalMemcacheConfig $settings
    *   The settings instance.
    * @param \Drupal\Core\Cache\CacheTagsChecksumInterface $checksum_provider
    *   The cache tags checksum service.
    */
-  public function __construct($bin, DrupalMemcacheInterface $memcache, LockBackendInterface $lock, DrupalMemcacheConfig $settings, CacheTagsChecksumInterface $checksum_provider) {
+  public function __construct($bin, DrupalMemcacheInterface $memcache, DrupalMemcacheConfig $settings, CacheTagsChecksumInterface $checksum_provider) {
     $this->bin = $bin;
     $this->memcache = $memcache;
-    $this->lock = $lock;
     $this->settings = $settings;
     $this->checksumProvider = $checksum_provider;
   }
@@ -119,49 +101,10 @@ class MemcacheBackend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   protected function valid($cid, $cache) {
-    $lock_key = "memcache_$cid:$this->bin";
     $cache->valid = FALSE;
 
     if ($cache) {
-      // Items that have expired are invalid.
-      if (isset($cache->expire) && ($cache->expire != CacheBackendInterface::CACHE_PERMANENT) && ($cache->expire <= REQUEST_TIME)) {
-        // If the memcache_stampede_protection variable is set, allow one
-        // process to rebuild the cache entry while serving expired content to
-        // the rest.
-        if ($this->settings->get('stampede_protection', FALSE)) {
-          // The process that acquires the lock will get a cache miss, all
-          // others will get a cache hit.
-          if (!$this->lock->acquire($lock_key, $this->settings->get('memcache_stampede_semaphore', 15))) {
-            $cache->valid = TRUE;
-          }
-        }
-      }
-      else {
-        $cache->valid = TRUE;
-      }
-    }
-    // On cache misses, attempt to avoid stampedes when the
-    // memcache_stampede_protection variable is enabled.
-    else {
-      if ($this->settings->get('stampede_protection', FALSE) && !$this->lock->acquire($lock_key, $this->settings->get('stampede_semaphore', 15))) {
-        // Prevent any single request from waiting more than three times due to
-        // stampede protection. By default this is a maximum total wait of 15
-        // seconds. This accounts for two possibilities - a cache and lock miss
-        // more than once for the same item. Or a cache and lock miss for
-        // different items during the same request.
-        // @todo: it would be better to base this on time waited rather than
-        // number of waits, but the lock API does not currently provide this
-        // information. Currently the limit will kick in for three waits of 25ms
-        // or three waits of 5000ms.
-        $this->lockCount++;
-        if ($this->lockCount <= $this->settings->get('stampede_wait_limit', 3)) {
-          // The memcache_stampede_semaphore variable was used in previous
-          // releases of memcache, but the max_wait variable was not, so by
-          // default divide the semaphore value by 3 (5 seconds).
-         $this->lock->wait($lock_key, $this->settings->get('stampede_wait_time', 5));
-          $cache = $this->get($cid);
-        }
-      }
+      $cache->valid = TRUE;
     }
 
     // Check if invalidateTags() has been called with any of the items's tags.
