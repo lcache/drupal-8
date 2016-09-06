@@ -33,12 +33,12 @@ class BackendFactory {
   }
 
   /**
-   * Gets MemcacheBackend for the specified cache bin.
+   * Gets an LCache Backend for the specified cache bin.
    *
    * @param $bin
    *   The cache bin for which the object is created.
    *
-   * @return \Drupal\memcache\MemcacheBackend
+   * @return \Drupal\lcache\Backend
    *   The cache backend object for the specified cache bin.
    */
   public function get($bin) {
