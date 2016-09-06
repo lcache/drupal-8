@@ -88,10 +88,7 @@ class Backend implements CacheBackendInterface {
 
     $address = $this->getAddress($cid);
     $ttl = NULL;
-    if ($expire === CacheBackendInterface::CACHE_TEMPORARY) {
-      $ttl = 86400;  // @TODO: Use a configurable value.
-    }
-    else if ($expire !== CacheBackendInterface::CACHE_PERMANENT) {
+    if ($expire !== CacheBackendInterface::CACHE_PERMANENT) {
       $ttl = $expire - REQUEST_TIME;
     }
     $this->integrated->set($address, $data, $ttl, $tags);
