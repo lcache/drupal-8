@@ -101,3 +101,13 @@ function lcache_install() {
     FOREIGN KEY (event_id) REFERENCES {lcache_events} (event_id)
   ');
 }
+
+/**
+ * Implements hook_uninstall().
+ */
+function lcache_uninstall() {
+  db_query('
+    ALTER TABLE {lcache_tags}
+    DROP CONSTRAINT IF EXISTS {lcache_tags_event_id}
+  ');
+}
