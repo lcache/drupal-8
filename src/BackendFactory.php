@@ -31,7 +31,7 @@ class BackendFactory {
     }
     $l2 = new \LCache\DatabaseL2($this->get_pdo_handle());
     $this->integrated = new \LCache\Integrated($l1, $l2);
-    $this->synchronize();
+    $this->integrated->synchronize();
   }
 
   /**
