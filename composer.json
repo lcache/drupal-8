@@ -1,6 +1,7 @@
 {
     "name": "drupal/lcache",
     "description": "LCache module.",
+    "type": "drupal-module",
     "license": "GPLv2",
     "authors": [
         {
