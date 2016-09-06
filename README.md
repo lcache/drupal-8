@@ -12,9 +12,12 @@ Upstream library: https://github.com/lcache/lcache
 ## Usage
 
  1. Upload the module to your site.
- 2. Update your composer dependencies to ensure that the
+ 2. Update your Composer dependencies to ensure that the
     lcache/lcache module is available to your Drupal site.
     See: https://www.drupal.org/node/2514612
  3. Install the module (so Drupal creates the schema).
- 4. Edit settings.php to make memcache the default cache class, for example:
+ 4. Edit settings.php to make LCache the default cache class, for example:
       $settings['cache']['default'] = 'cache.backend.lcache';
+ 5. Configure write-heavy caches like the form cache to use a backend like
+    the default database one or another write-friendly cache.
+ 
