@@ -42,9 +42,6 @@ class BackendFactory {
    *   The cache backend object for the specified cache bin.
    */
   public function get($bin) {
-    return new Backend(
-      $bin,
-      $this->integrated
-    );
+    return new Backend($bin, $this->integrated);
   }
 }
