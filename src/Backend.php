@@ -34,7 +34,7 @@ class Backend implements CacheBackendInterface {
    * @param string $bin
    *   The bin name.
    */
-  public function __construct($bin, Integrated $integrated) {
+  public function __construct($bin, \LCache\Integrated $integrated) {
     $this->bin = $bin;
     $this->integrated = $integrated;
   }
