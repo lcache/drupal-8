@@ -12,6 +12,7 @@ class BackendFactory {
   protected $integrated;
 
   protected function get_pdo_handle() {
+    // @TODO: Use Drupal's connection arguments or actually pull Drupal's PDO handle.
     $dsn = 'mysql:host='. $_ENV['DB_HOST']. ';port='. $_ENV['DB_PORT'] .';dbname='. $_ENV['DB_NAME'];
     $options = array(PDO::ATTR_TIMEOUT => 2, PDO::MYSQL_ATTR_INIT_COMMAND => 'SET sql_mode="ANSI_QUOTES"');
     $dbh = new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $options);
@@ -30,6 +31,7 @@ class BackendFactory {
     }
     $l2 = new \LCache\DatabaseL2($this->get_pdo_handle());
     $this->integrated = new \LCache\Integrated($l1, $l2);
+    $this->synchronize();
   }
 
   /**
