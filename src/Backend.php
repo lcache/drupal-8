@@ -54,7 +54,7 @@ class Backend implements CacheBackendInterface {
       return FALSE;
     }
 
-    $response = new stdClass();
+    $response = new \stdClass();
     $response->cid = $cid;
     $response->data = $entry->value;
     $response->created = $entry->created;
