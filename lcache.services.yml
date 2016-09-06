@@ -1,10 +1,4 @@
 services:
-  memcache.config:
-    class: Drupal\memcache\DrupalMemcacheConfig
-    arguments: ['@settings']
-  memcache.factory:
-    class: Drupal\memcache\DrupalMemcacheFactory
-    arguments: ['@memcache.config']
-  cache.backend.memcache:
-    class: Drupal\memcache\MemcacheBackendFactory
-    arguments: ['@memcache.config', '@memcache.factory', '@cache_tags.invalidator.checksum']
+  cache.backend.lcache:
+    class: Drupal\lcache\BackendFactory
+    arguments: []
