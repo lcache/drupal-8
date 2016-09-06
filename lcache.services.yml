@@ -1,0 +1,4 @@
+services:
+  cache.backend.lcache:
+    class: Drupal\lcache\BackendFactory
+    arguments: []
