@@ -65,14 +65,13 @@ function lcache_schema() {
       'tag' => array(
         'description' => 'Cache tag.',
         'type' => 'varchar',
-        'length' => 255,
+        'length' => 128,
         'not null' => FALSE,
         'default' => NULL,
       ),
       'event_id' => array(
         'description' => 'The event_id associated with the cache entry.',
         'type' => 'int',
-        'length' => 255,
         'not null' => TRUE,
         'default' => 0,
       ),
