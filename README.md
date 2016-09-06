@@ -1,21 +1,24 @@
-## Requirements
+# LCache
 
-- PHP 5.6+
-- APCu 4.0.11+
+This module provides a combination L1/L2 cache using a combination
+of APCu as L1 with a database as L2 (and for coherency management
+among the L1 caches).
 
-For more detailed instructions on installing a memcached daemon or either of the
-memcache PECL extensions, please see the documentation online at
-https://www.drupal.org/node/1131458 which includes links to external
-walk-throughs for various operating systems.
+Currently only supported on Pantheon, but there's nothing that
+inherently relies on anything Pantheon-specific.
 
-## Installation
+Upstream library: https://github.com/lcache/lcache
 
-These are the steps you need to take in order to use this software. Order
-is important.
+## Usage
 
- 1. Make sure you have PECL APCu installed and configured to have enough memory.
- 2. Enable the LCache module. This will install the necessary schema.
+ 1. Upload the module to your site.
+    a. If using Composer to manage your sites modules:  
+       composer require drupal/lcache [* TBD]
+    b. If not using Composer:
+       cd sites/all/modules
+       git clone git@github.com:lcache/drupal-8.git lcache
+       lcache
+       composer install
+ 2. Install the module (so Drupal creates the schema).
  3. Edit settings.php to make memcache the default cache class, for example:
       $settings['cache']['default'] = 'cache.backend.lcache';
- 4. Configure certain caches, like for forms, to use the standard database cache.
- 
