@@ -91,3 +91,14 @@ function lcache_schema() {
 
   return $schema;
 }
+
+/**
+ * Implements hook_install().
+ */
+function lcache_install() {
+  db_query('
+    ALTER TABLE {lcache_tags}
+    ADD CONSTRAINT {lcache_tags_event_id}
+    FOREIGN KEY (event_id) REFERENCES {lcache_events} (event_id)
+  ');
+}
