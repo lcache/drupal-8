@@ -31,7 +31,7 @@ sleep 30
 } &> /dev/null
 terminus site clear-cache
 
-./../../../vendor/bin/behat --config=../behat/behat-pantheon.yml ../behat/features/
+./../../../vendor/bin/behat --config=../../behat/behat-pantheon.yml ../../behat/features/
 sleep 15
 
 
@@ -58,7 +58,7 @@ git add .
 git commit -m 'LCache in settings.php'
 git push origin $TERMINUS_ENV
 
-./../../../vendor/bin/behat --config=../behat/behat-pantheon.yml ../behat/features/
+./../../../vendor/bin/behat --config=../../behat/behat-pantheon.yml ../../behat/features/
 
 
 terminus site clear-cache
