@@ -31,12 +31,10 @@ sleep 30
 } &> /dev/null
 terminus site clear-cache
 
-cd ..
-./../../vendor/bin/behat --config=../behat/behat-pantheon.yml ../behat/features/
-
-
-cd ${TERMINUS_SITE}
+./../../../vendor/bin/behat --config=../behat/behat-pantheon.yml ../behat/features/
 sleep 15
+
+
 
 #composer config repositories.drupal composer https://packages.drupal.org/8
 composer config repositories.d8lcache vcs git@github.com:lcache/drupal-8.git
@@ -60,7 +58,7 @@ git add .
 git commit -m 'LCache in settings.php'
 git push origin $TERMINUS_ENV
 
-./../../vendor/bin/behat --config=../behat/behat-pantheon.yml ../behat/features/
+./../../../vendor/bin/behat --config=../behat/behat-pantheon.yml ../behat/features/
 
 
 terminus site clear-cache
