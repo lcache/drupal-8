@@ -6,7 +6,6 @@ machine:
   environment:
     TERMINUS_ENV: ci-$CIRCLE_BUILD_NUM
     TERMINUS_SITE: d8lcache
-    PATH: $PATH:~/drupal-8/vendor/bin
 
 dependencies:
   cache_directories:
