@@ -12,7 +12,6 @@ default:
         - Drupal\DrupalExtension\Context\DrupalContext
         - Drupal\DrupalExtension\Context\DrushContext
         - Drupal\DrupalExtension\Context\MinkContext
-        - scripted_php7_profiling\Behat\PerformanceHelpers
   extensions:
     Behat\MinkExtension:
       goutte: ~
