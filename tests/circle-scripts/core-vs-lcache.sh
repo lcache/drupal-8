@@ -12,12 +12,14 @@ export BEHAT_PARAMS='{"extensions" : {"Behat\\MinkExtension" : {"base_url" : "ht
 
 terminus site set-connection-mode  --mode=git
 
+
 cd ${TERMINUS_SITE}
 git checkout master
 git branch -D $TERMINUS_ENV
 git pull
 git checkout -b $TERMINUS_ENV
 
+echo "php_version: 7.0 " >> pantheon.yml
 
 git add pantheon.yml
 git commit -m 'Clean install of Drupal Core'
