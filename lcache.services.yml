@@ -2,3 +2,9 @@ services:
   cache.backend.lcache:
     class: Drupal\lcache\BackendFactory
     arguments: []
+
+  cache_tags.invalidator.lcache:
+    class: Drupal\lcache\BackendInvalidator
+    arguments: ['@database']
+    tags:
+      - { name: cache_tags_invalidator}
