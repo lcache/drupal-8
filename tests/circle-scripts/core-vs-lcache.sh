@@ -39,20 +39,10 @@ terminus site clear-cache
 } &> /dev/null
 
 
-for i in $(seq 2); do
+for i in $(seq 35); do
   echo "Peformance test pass $i with Core"
   ./../../../vendor/bin/behat --config=../../behat/behat-pantheon.yml ../../behat/features/create-node-view-all-nodes.feature
 done
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -93,8 +83,8 @@ git push origin $TERMINUS_ENV
 } &> /dev/null
 
 
-for i in $(seq 2); do
-  echo "Peformance test pass $i with Core"
+for i in $(seq 35); do
+  echo "Peformance test pass $i with LCache"
   ./../../../vendor/bin/behat --config=../../behat/behat-pantheon.yml ../../behat/features/create-node-view-all-nodes.feature
 done
 

@@ -64,6 +64,11 @@ class PerformanceHelpers implements Context, SnippetAcceptingContext {
       $next_page_link = $page->find('css', '.pager__item--next a');
 
 
+      print_r("\n\n");
+      print_r($next_page_url);
+      print_r("\n\n");
+
+
       if ($next_page_link) {
         $next_page_url = $next_page_link->getAttribute('href');
       }
@@ -93,9 +98,9 @@ class PerformanceHelpers implements Context, SnippetAcceptingContext {
 
 //      echo "\n";
 //      echo $this->minkContext->getSession()->getPage()->find('css', 'h1.entry-title')->getHtml();
-//      echo "\n";
-//      $this->minkContext->printCurrentUrl();
-//      echo "\n";
+      echo "\n";
+      $this->minkContext->printCurrentUrl();
+      echo "\n";
     }
 
   }
@@ -111,8 +116,9 @@ class PerformanceHelpers implements Context, SnippetAcceptingContext {
       $post_urls[] =$post_link->getAttribute('href');
     }
 
+    print_r("\n\n");
     print_r($post_urls[0]);
-
+    print_r("\n\n");
     return $post_urls;
   }
 
