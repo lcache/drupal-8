@@ -2,14 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\lcache\BackendFactory.
+ * Contains \Drupal\lcache\BackendInvalidator.
  */
 
 namespace Drupal\lcache;
-
-use Drupal\Core\Database\Database;
-use Drupal\Core\Database\Connection;
-use Drupal\Core\Cache\CacheTagsChecksumInterface;
 
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 

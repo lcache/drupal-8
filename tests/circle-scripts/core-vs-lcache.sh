@@ -2,16 +2,12 @@
 
 set -ex
 
-
 # Create a drush alias file so that Behat tests can be executed against Pantheon.
 terminus sites aliases
 # Drush Behat driver fails without this option.
 echo "\$options['strict'] = 0;" >> ~/.drush/pantheon.aliases.drushrc.php
-
 export BEHAT_PARAMS='{"extensions" : {"Behat\\MinkExtension" : {"base_url" : "http://'$TERMINUS_ENV'-'$TERMINUS_SITE'.pantheonsite.io/"}, "Drupal\\DrupalExtension" : {"drush" :   {  "alias":  "@pantheon.'$TERMINUS_SITE'.'$TERMINUS_ENV'" }}}}'
-
 terminus site set-connection-mode  --mode=git
-
 
 cd ${TERMINUS_SITE}
 git checkout master
@@ -34,8 +30,7 @@ terminus site clear-cache
 ./../../../vendor/bin/behat --config=../../behat/behat-pantheon.yml ../../behat/features/
 sleep 15
 
-
-
+# Set up LCache repo
 #composer config repositories.drupal composer https://packages.drupal.org/8
 composer config repositories.d8lcache vcs git@github.com:lcache/drupal-8.git
 composer require drupal/lcache:dev-master#$CIRCLE_SHA1
@@ -59,6 +54,5 @@ git commit -m 'LCache in settings.php'
 git push origin $TERMINUS_ENV
 
 ./../../../vendor/bin/behat --config=../../behat/behat-pantheon.yml ../../behat/features/
-
 
 terminus site clear-cache
