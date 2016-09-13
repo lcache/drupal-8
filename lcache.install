@@ -30,7 +30,7 @@ function lcache_schema() {
       'address' => array(
         'description' => 'Cache entry address (bin and key).',
         'type' => 'varchar_ascii',
-        'length' => 2056,
+        'length' => 255,
         'not null' => FALSE,
         'default' => NULL,
       ),
@@ -91,7 +91,6 @@ function lcache_schema() {
   return $schema;
 }
 
-
 /**
  * Implements hook_install().
  */
@@ -104,7 +103,6 @@ function lcache_install() {
   ');
 }
 
-
 /**
  * Implements hook_uninstall().
  */
@@ -114,4 +112,3 @@ function lcache_uninstall() {
     DROP FOREIGN KEY IF EXISTS {lcache_tags_event_id}
   ');
 }
-
