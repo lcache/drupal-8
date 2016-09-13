@@ -27,7 +27,36 @@ sleep 30
 } &> /dev/null
 terminus site clear-cache
 
-./../../../vendor/bin/behat --config=../../behat/behat-pantheon.yml ../../behat/features/
+
+
+# Make a custom admin user because the normal Drush/Behat way of creating users
+# 1) is slow and 2) would require rerunning with each Behat run and 3)
+# would result nodes getting deleted at the end of each run.
+{
+ terminus drush "user-create $DRUPAL_ADMIN_USERNAME"
+ terminus drush "user-add-role  administrator $DRUPAL_ADMIN_USERNAME"
+ terminus drush "upwd $DRUPAL_ADMIN_USERNAME  --password=$DRUPAL_ADMIN_PASSWORD"
+} &> /dev/null
+
+
+for i in $(seq 2); do
+  echo "Peformance test pass $i with Core"
+  ./../../../vendor/bin/behat --config=../../behat/behat-pantheon.yml ../../behat/features/create-node-view-all-nodes.feature
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 sleep 15
 
 # Set up LCache repo
@@ -53,6 +82,21 @@ git add .
 git commit -m 'LCache in settings.php'
 git push origin $TERMINUS_ENV
 
-./../../../vendor/bin/behat --config=../../behat/behat-pantheon.yml ../../behat/features/
+
+# Make a custom admin user because the normal Drush/Behat way of creating users
+# 1) is slow and 2) would require rerunning with each Behat run and 3)
+# would result nodes getting deleted at the end of each run.
+{
+ terminus drush "user-create $DRUPAL_ADMIN_USERNAME"
+ terminus drush "user-add-role  administrator $DRUPAL_ADMIN_USERNAME"
+ terminus drush "upwd $DRUPAL_ADMIN_USERNAME  --password=$DRUPAL_ADMIN_PASSWORD"
+} &> /dev/null
+
+
+for i in $(seq 2); do
+  echo "Peformance test pass $i with Core"
+  ./../../../vendor/bin/behat --config=../../behat/behat-pantheon.yml ../../behat/features/create-node-view-all-nodes.feature
+done
+
 
 terminus site clear-cache
