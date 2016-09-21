@@ -62,11 +62,8 @@ class PerformanceHelpers implements Context, SnippetAcceptingContext {
 
       $page = $this->minkContext->getSession()->getPage();
       $next_page_link = $page->find('css', '.pager__item--next a');
+      //echo $this->minkContext->getSession()->getPage()->find('css', '.pager__items')->getHtml();
 
-
-      print_r("\n\n");
-      print_r($next_page_url);
-      print_r("\n\n");
 
 
       if ($next_page_link) {
@@ -76,10 +73,16 @@ class PerformanceHelpers implements Context, SnippetAcceptingContext {
         $next_page_exists = FALSE;
       }
 
-      $this->openAllPostLinksOnASinglePage($page);
+      //$this->openAllPostLinksOnASinglePage($page);
 
       if (!empty($next_page_link)) {
         $this->minkContext->visit($next_page_url);
+
+        print_r("\n\n");
+        print_r($next_page_url);
+        print_r("\n\n");
+
+        //print_r($this->minkContext->getSession()->getResponseHeaders());
       }
     }
     echo "last page visited was $next_page_url";
@@ -96,11 +99,12 @@ class PerformanceHelpers implements Context, SnippetAcceptingContext {
 
       $this->minkContext->visit($post_url);
 
-//      echo "\n";
-//      echo $this->minkContext->getSession()->getPage()->find('css', 'h1.entry-title')->getHtml();
+      echo "\n";
+      echo $this->minkContext->getSession()->getPage()->find('css', 'h1.page-title')->getHtml();
       echo "\n";
       $this->minkContext->printCurrentUrl();
       echo "\n";
+      //print_r($this->minkContext->getSession()->getResponseHeaders());
     }
 
   }
@@ -138,4 +142,5 @@ class PerformanceHelpers implements Context, SnippetAcceptingContext {
     //$this->minkContext->printCurrentUrl();
 
   }
+
 }
