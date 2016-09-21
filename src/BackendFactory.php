@@ -7,15 +7,17 @@
 
 namespace Drupal\lcache;
 
+use Drupal\Core\Database\Connection;
+
 class BackendFactory {
 
   protected $integrated;
 
   protected function get_pdo_handle() {
-    // @TODO: Use Drupal's connection arguments or actually pull Drupal's PDO handle.
-    $dsn = 'mysql:host='. $_ENV['DB_HOST']. ';port='. $_ENV['DB_PORT'] .';dbname='. $_ENV['DB_NAME'];
-    $options = array(\PDO::ATTR_TIMEOUT => 2, \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET sql_mode="ANSI_QUOTES"');
-    $dbh = new \PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $options);
+    $db_info = $this->connection->getConnectionOptions();
+    $dsn = 'mysql:host='. $db_info['host']. ';port='. $db_info['port'] .';dbname='. $db_info['database'];
+    $options = array(\PDO::ATTR_TIMEOUT => 2, \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET sql_mode="ANSI_QUOTES,STRICT_ALL_TABLES"');
+    $dbh = new \PDO($dsn, $db_info['username'], $db_info['password'], $options);
     $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     return $dbh;
   }
@@ -23,7 +25,10 @@ class BackendFactory {
   /**
    * Constructs the BackendFactory object.
    */
-  public function __construct() {
+  public function __construct(Connection $connection) {
+
+    $this->connection = $connection;
+
     // Use the Null L1 cache for the CLI.
     $l1 = new \LCache\NullL1();
     if (php_sapi_name() !== 'cli') {
@@ -46,4 +51,15 @@ class BackendFactory {
   public function get($bin) {
     return new Backend($bin, $this->integrated);
   }
+
+  /**
+   * Gets an LCache Backend for the specified cache bin.
+   *
+   * @return \LCache\Integrated
+   *   The integrated cache backend.
+   */
+  public function getIntegratedLCache() {
+    return $this->integrated;
+  }
+
 }
