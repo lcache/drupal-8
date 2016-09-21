@@ -39,7 +39,7 @@ terminus site clear-cache
 } &> /dev/null
 
 
-for i in $(seq 100); do
+for i in $(seq 2); do
   echo "Peformance test pass $i with Core"
   ./../../../vendor/bin/behat --config=../../behat/behat-pantheon.yml ../../behat/features/create-node-view-all-nodes.feature
 done
@@ -67,7 +67,13 @@ sleep 60
 terminus drush "en lcache -y"
 terminus site clear-cache
 
-echo "\$settings['cache']['default'] = 'cache.backend.lcache';" >> sites/default/settings.php
+# echo "\$settings['cache']['default'] = 'cache.backend.lcache';" >> sites/default/settings.php
+
+# Swap services for the bins otherwise using ChainedFastBackend
+echo "\$settings['cache']['bins']['bootstrap'] = 'cache.backend.lcache';" >> sites/default/settings.php
+echo "\$settings['cache']['bins']['config']    = 'cache.backend.lcache';" >> sites/default/settings.php
+echo "\$settings['cache']['bins']['discovery'] = 'cache.backend.lcache';" >> sites/default/settings.php
+
 git add .
 git commit -m 'LCache in settings.php'
 git push origin $TERMINUS_ENV
