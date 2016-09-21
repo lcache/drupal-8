@@ -23,14 +23,14 @@ function lcache_schema() {
       'pool' => array(
         'description' => 'PHP process pool that wrote the change.',
         'type' => 'varchar',
-        'length' => 2056,
+        'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'address' => array(
         'description' => 'Cache entry address (bin and key).',
         'type' => 'varchar_ascii',
-        'length' => 255,
+        'length' => 512,
         'not null' => FALSE,
         'default' => NULL,
       ),
