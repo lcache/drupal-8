@@ -23,7 +23,7 @@ function lcache_schema() {
       'pool' => array(
         'description' => 'PHP process pool that wrote the change.',
         'type' => 'varchar',
-        'length' => 512,
+        'length' => 2056,
         'not null' => TRUE,
         'default' => '',
       ),
