@@ -80,6 +80,7 @@ echo "\$settings['cache']['bins']['dynamic_page_cache'] = 'cache.backend.lcache'
 echo "\$settings['cache']['bins']['toolbar']            = 'cache.backend.lcache';" >> sites/default/settings.php
 echo "\$settings['cache']['bins']['menu']               = 'cache.backend.lcache';" >> sites/default/settings.php
 echo "\$settings['cache']['bins']['entity']             = 'cache.backend.lcache';" >> sites/default/settings.php
+echo "\$settings['cache']['bins']['data']               = 'cache.backend.lcache';" >> sites/default/settings.php
 
 
 
