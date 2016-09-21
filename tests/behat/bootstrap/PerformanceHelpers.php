@@ -73,7 +73,7 @@ class PerformanceHelpers implements Context, SnippetAcceptingContext {
         $next_page_exists = FALSE;
       }
 
-      //$this->openAllPostLinksOnASinglePage($page);
+      $this->openAllPostLinksOnASinglePage($page);
 
       if (!empty($next_page_link)) {
         $this->minkContext->visit($next_page_url);
