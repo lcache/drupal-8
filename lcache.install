@@ -30,7 +30,7 @@ function lcache_schema() {
       'address' => array(
         'description' => 'Cache entry address (bin and key).',
         'type' => 'varchar_ascii',
-        'length' => 255,
+        'length' => 512,
         'not null' => FALSE,
         'default' => NULL,
       ),
