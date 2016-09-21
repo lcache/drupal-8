@@ -83,7 +83,7 @@ git push origin $TERMINUS_ENV
 } &> /dev/null
 
 
-for i in $(seq 10); do
+for i in $(seq 100); do
   echo "Peformance test pass $i with LCache"
   ./../../../vendor/bin/behat --config=../../behat/behat-pantheon.yml ../../behat/features/create-node-view-all-nodes.feature
 done
