@@ -78,14 +78,14 @@ terminus site clear-cache
 #echo "\$settings['cache']['bins']['render']             = 'cache.backend.lcache';" >> sites/default/settings.php
 #echo "\$settings['cache']['bins']['dynamic_page_cache'] = 'cache.backend.lcache';" >> sites/default/settings.php
 # echo "\$settings['cache']['bins']['toolbar']            = 'cache.backend.lcache';" >> sites/default/settings.php
- echo "\$settings['cache']['bins']['menu']               = 'cache.backend.lcache';" >> sites/default/settings.php
-#echo "\$settings['cache']['bins']['entity']             = 'cache.backend.lcache';" >> sites/default/settings.php
+# echo "\$settings['cache']['bins']['menu']               = 'cache.backend.lcache';" >> sites/default/settings.php
+echo "\$settings['cache']['bins']['entity']             = 'cache.backend.lcache';" >> sites/default/settings.php
 # echo "\$settings['cache']['bins']['data']               = 'cache.backend.lcache';" >> sites/default/settings.php
 
 
 
 git add .
-git commit -m 'LCache in settings.php'
+git commit -m 'LCache for entity bin'
 git push origin $TERMINUS_ENV
 
 
