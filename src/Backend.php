@@ -53,11 +53,26 @@ class Backend implements CacheBackendInterface {
       return FALSE;
     }
 
+// @todo, make sure these style errors are caught by Drupal TI
     $response = new \stdClass();
     $response->cid = $cid;
-    $response->data = $entry->value;
-    $response->created = $entry->created;
-    $response->expire = $entry->expiration;
+
+      $response->valid = TRUE;
+      $response->data = $entry->value;
+      $response->created = $entry->created;
+
+
+      // LCache the library uses NULL for permanent
+      // but that may confuse parts of Drupal.
+      // @todo, investigate if there is a better answer than this munging.
+      if (is_null($entry->expiration)) {
+        $entry->expiration = CacheBackendInterface::CACHE_PERMANENT;
+      }
+
+$response->expire = $entry->expiration;
+
+
+
     return $response;
   }
 
@@ -73,6 +88,7 @@ class Backend implements CacheBackendInterface {
         $cache[$cid] = $c;
       }
     }
+    $cids = array_diff($cids, array_keys($cache));
     return $cache;
   }
 
