@@ -31,7 +31,7 @@ class BackendUnitTest extends GenericCacheBackendUnitTestBase {
    *   A new LCache Backend object.
    */
   protected function createCacheBackend($bin) {
-    $factory = new BackendFactory();
+    $factory = new BackendFactory($this->container->get('database'));
     return $factory->get($bin);
   }
 }
