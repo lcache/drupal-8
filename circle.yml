@@ -60,7 +60,7 @@ test:
     - curl $SERVER
     - cd $DOCROOT && drush en simpletest  -y
     - cd $DOCROOT && composer config repositories.d8lcache vcs git@github.com:lcache/drupal-8.git
-    - cd $DOCROOT && composer require "drupal/lcache:dev-master#$CIRCLE_SHA1"
+    - cd $DOCROOT && composer require "drupal/lcache:dev-8.x-1.x#$CIRCLE_SHA1"
     - cd $DOCROOT && drush en lcache -y
 
   override:
