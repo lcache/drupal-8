@@ -9,10 +9,16 @@ namespace Drupal\lcache;
 
 use Drupal\Core\Database\Connection;
 
+/**
+ * A Factory for an LCache backend.
+ */
 class BackendFactory {
 
   protected $integrated;
 
+  /**
+   * Constructs the the databse connection for L2.
+   */
   protected function getPdoHandle() {
     $db_info = $this->connection->getConnectionOptions();
     $dsn = 'mysql:host=' . $db_info['host'] . ';port=' . $db_info['port'] . ';dbname=' . $db_info['database'];
