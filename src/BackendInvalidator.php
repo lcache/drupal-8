@@ -9,10 +9,19 @@ namespace Drupal\lcache;
 
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 
+/**
+ * Invalidates LCache tags.
+ */
 class BackendInvalidator implements CacheTagsInvalidatorInterface {
 
   protected $integrated;
 
+  /**
+   * Constructs an invalidator object.
+   *
+   * @param \LCache\Integrated $integrated
+   *   The integrated Cache object were invalidations will be run.
+   */
   public function __construct(\LCache\Integrated $integrated) {
     $this->integrated = $integrated;
   }
@@ -22,8 +31,7 @@ class BackendInvalidator implements CacheTagsInvalidatorInterface {
    */
   public function invalidateTags(array $tags) {
     foreach ($tags as $tag) {
-        $this->integrated->deleteTag($tag);
+      $this->integrated->deleteTag($tag);
     }
   }
-
 }
