@@ -273,7 +273,4 @@ public function testSetGet() {
     // error.
     $this->assertFalse($backend->invalidateMultiple(array()));
   }
-
-
-
 }
