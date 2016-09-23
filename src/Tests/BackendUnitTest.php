@@ -36,113 +36,114 @@ class BackendUnitTest extends GenericCacheBackendUnitTestBase {
     return $factory->get($bin);
   }
 
+  // This portion of the class contains tests that were copied from Core and
+  // slightly modified to accommodate bugs.
+  // @codingStandardsIgnoreStart
+  /**
+   * Tests the get and set methods of Drupal\Core\Cache\CacheBackendInterface.
+   */
+  public function testSetGet() {
+    $backend = $this->getCacheBackend();
 
+    $this->assertIdentical(FALSE, $backend->get('test1'), "Backend does not contain data for cache id test1.");
+    $with_backslash = array('foo' => '\Drupal\foo\Bar');
+    $backend->set('test1', $with_backslash);
+    $cached = $backend->get('test1');
+    $this->assert(is_object($cached), "Backend returned an object for cache id test1.");
+    $this->assertIdentical($with_backslash, $cached->data);
+    $this->assertTrue($cached->valid, 'Item is marked as valid.');
+    // We need to round because microtime may be rounded up in the backend.
+    $this->assertTrue($cached->created >= REQUEST_TIME && $cached->created <= round(microtime(TRUE), 3), 'Created time is correct.');
+    $this->assertEqual($cached->expire, Cache::PERMANENT, 'Expire time is correct.');
 
-/**
- * Tests the get and set methods of Drupal\Core\Cache\CacheBackendInterface.
- */
-public function testSetGet() {
-  $backend = $this->getCacheBackend();
+    $this->assertIdentical(FALSE, $backend->get('test2'), "Backend does not contain data for cache id test2.");
+    $backend->set('test2', array('value' => 3), REQUEST_TIME + 3);
+    $cached = $backend->get('test2');
+    $this->assert(is_object($cached), "Backend returned an object for cache id test2.");
+    $this->assertIdentical(array('value' => 3), $cached->data);
+    $this->assertTrue($cached->valid, 'Item is marked as valid.');
+    $this->assertTrue($cached->created >= REQUEST_TIME && $cached->created <= round(microtime(TRUE), 3), 'Created time is correct.');
+    $this->assertEqual($cached->expire, REQUEST_TIME + 3, 'Expire time is correct.');
 
-  $this->assertIdentical(FALSE, $backend->get('test1'), "Backend does not contain data for cache id test1.");
-  $with_backslash = array('foo' => '\Drupal\foo\Bar');
-  $backend->set('test1', $with_backslash);
-  $cached = $backend->get('test1');
-  $this->assert(is_object($cached), "Backend returned an object for cache id test1.");
-  $this->assertIdentical($with_backslash, $cached->data);
-  $this->assertTrue($cached->valid, 'Item is marked as valid.');
-  // We need to round because microtime may be rounded up in the backend.
-  $this->assertTrue($cached->created >= REQUEST_TIME && $cached->created <= round(microtime(TRUE), 3), 'Created time is correct.');
-  $this->assertEqual($cached->expire, Cache::PERMANENT, 'Expire time is correct.');
+    $backend->set('test3', 'foobar', REQUEST_TIME - 3);
+    $this->assertFalse($backend->get('test3'), 'Invalid item not returned.');
+    $cached = $backend->get('test3', TRUE);
 
-  $this->assertIdentical(FALSE, $backend->get('test2'), "Backend does not contain data for cache id test2.");
-  $backend->set('test2', array('value' => 3), REQUEST_TIME + 3);
-  $cached = $backend->get('test2');
-  $this->assert(is_object($cached), "Backend returned an object for cache id test2.");
-  $this->assertIdentical(array('value' => 3), $cached->data);
-  $this->assertTrue($cached->valid, 'Item is marked as valid.');
-  $this->assertTrue($cached->created >= REQUEST_TIME && $cached->created <= round(microtime(TRUE), 3), 'Created time is correct.');
-  $this->assertEqual($cached->expire, REQUEST_TIME + 3, 'Expire time is correct.');
+    // @todo, this assertion is present in the parent class, currently fails.
+    // LCache the treats invalidations the same as deletions.
+    // https://github.com/lcache/lcache/issues/41
+    // $this->assert(is_object($cached), 'Backend returned an object for cache id test3.');
+    // $this->assertFalse($cached->valid, 'Item is marked as valid.');
+    //$this->assertTrue($cached->created >= REQUEST_TIME && $cached->created <= round(microtime(TRUE), 3), 'Created time is correct.');
+    //$this->assertEqual($cached->expire, REQUEST_TIME - 3, 'Expire time is correct.');
 
-  $backend->set('test3', 'foobar', REQUEST_TIME - 3);
-  $this->assertFalse($backend->get('test3'), 'Invalid item not returned.');
-  $cached = $backend->get('test3', TRUE);
+    $this->assertIdentical(FALSE, $backend->get('test4'), "Backend does not contain data for cache id test4.");
+    $with_eof = array('foo' => "\nEOF\ndata");
+    $backend->set('test4', $with_eof);
+    $cached = $backend->get('test4');
+    $this->assert(is_object($cached), "Backend returned an object for cache id test4.");
+    $this->assertIdentical($with_eof, $cached->data);
+    $this->assertTrue($cached->valid, 'Item is marked as valid.');
+    $this->assertTrue($cached->created >= REQUEST_TIME && $cached->created <= round(microtime(TRUE), 3), 'Created time is correct.');
+    $this->assertEqual($cached->expire, Cache::PERMANENT, 'Expire time is correct.');
 
-  // @todo, this assertion is present in the parent class, currently fails.
-  // LCache the treats invalidations the same as deletions.
-  // https://github.com/lcache/lcache/issues/41
-  // $this->assert(is_object($cached), 'Backend returned an object for cache id test3.');
-  // $this->assertFalse($cached->valid, 'Item is marked as valid.');
-  //$this->assertTrue($cached->created >= REQUEST_TIME && $cached->created <= round(microtime(TRUE), 3), 'Created time is correct.');
-  //$this->assertEqual($cached->expire, REQUEST_TIME - 3, 'Expire time is correct.');
+    $this->assertIdentical(FALSE, $backend->get('test5'), "Backend does not contain data for cache id test5.");
+    $with_eof_and_semicolon = array('foo' => "\nEOF;\ndata");
+    $backend->set('test5', $with_eof_and_semicolon);
+    $cached = $backend->get('test5');
+    $this->assert(is_object($cached), "Backend returned an object for cache id test5.");
+    $this->assertIdentical($with_eof_and_semicolon, $cached->data);
+    $this->assertTrue($cached->valid, 'Item is marked as valid.');
+    $this->assertTrue($cached->created >= REQUEST_TIME && $cached->created <= round(microtime(TRUE), 3), 'Created time is correct.');
+    $this->assertEqual($cached->expire, Cache::PERMANENT, 'Expire time is correct.');
 
-  $this->assertIdentical(FALSE, $backend->get('test4'), "Backend does not contain data for cache id test4.");
-  $with_eof = array('foo' => "\nEOF\ndata");
-  $backend->set('test4', $with_eof);
-  $cached = $backend->get('test4');
-  $this->assert(is_object($cached), "Backend returned an object for cache id test4.");
-  $this->assertIdentical($with_eof, $cached->data);
-  $this->assertTrue($cached->valid, 'Item is marked as valid.');
-  $this->assertTrue($cached->created >= REQUEST_TIME && $cached->created <= round(microtime(TRUE), 3), 'Created time is correct.');
-  $this->assertEqual($cached->expire, Cache::PERMANENT, 'Expire time is correct.');
+    $with_variable = array('foo' => '$bar');
+    $backend->set('test6', $with_variable);
+    $cached = $backend->get('test6');
+    $this->assert(is_object($cached), "Backend returned an object for cache id test6.");
+    $this->assertIdentical($with_variable, $cached->data);
 
-  $this->assertIdentical(FALSE, $backend->get('test5'), "Backend does not contain data for cache id test5.");
-  $with_eof_and_semicolon = array('foo' => "\nEOF;\ndata");
-  $backend->set('test5', $with_eof_and_semicolon);
-  $cached = $backend->get('test5');
-  $this->assert(is_object($cached), "Backend returned an object for cache id test5.");
-  $this->assertIdentical($with_eof_and_semicolon, $cached->data);
-  $this->assertTrue($cached->valid, 'Item is marked as valid.');
-  $this->assertTrue($cached->created >= REQUEST_TIME && $cached->created <= round(microtime(TRUE), 3), 'Created time is correct.');
-  $this->assertEqual($cached->expire, Cache::PERMANENT, 'Expire time is correct.');
+    // Make sure that a cached object is not affected by changing the original.
+    $data = new \stdClass();
+    $data->value = 1;
+    $data->obj = new \stdClass();
+    $data->obj->value = 2;
+    $backend->set('test7', $data);
+    $expected_data = clone $data;
+    // Add a property to the original. It should not appear in the cached data.
+    $data->this_should_not_be_in_the_cache = TRUE;
+    $cached = $backend->get('test7');
+    $this->assert(is_object($cached), "Backend returned an object for cache id test7.");
+    $this->assertEqual($expected_data, $cached->data);
+    $this->assertFalse(isset($cached->data->this_should_not_be_in_the_cache));
+    // Add a property to the cache data. It should not appear when we fetch
+    // the data from cache again.
+    $cached->data->this_should_not_be_in_the_cache = TRUE;
+    $fresh_cached = $backend->get('test7');
+    $this->assertFalse(isset($fresh_cached->data->this_should_not_be_in_the_cache));
 
-  $with_variable = array('foo' => '$bar');
-  $backend->set('test6', $with_variable);
-  $cached = $backend->get('test6');
-  $this->assert(is_object($cached), "Backend returned an object for cache id test6.");
-  $this->assertIdentical($with_variable, $cached->data);
+    // Check with a long key.
+    $cid = str_repeat('a', 300);
+    $backend->set($cid, 'test');
+    $this->assertEqual('test', $backend->get($cid)->data);
 
-  // Make sure that a cached object is not affected by changing the original.
-  $data = new \stdClass();
-  $data->value = 1;
-  $data->obj = new \stdClass();
-  $data->obj->value = 2;
-  $backend->set('test7', $data);
-  $expected_data = clone $data;
-  // Add a property to the original. It should not appear in the cached data.
-  $data->this_should_not_be_in_the_cache = TRUE;
-  $cached = $backend->get('test7');
-  $this->assert(is_object($cached), "Backend returned an object for cache id test7.");
-  $this->assertEqual($expected_data, $cached->data);
-  $this->assertFalse(isset($cached->data->this_should_not_be_in_the_cache));
-  // Add a property to the cache data. It should not appear when we fetch
-  // the data from cache again.
-  $cached->data->this_should_not_be_in_the_cache = TRUE;
-  $fresh_cached = $backend->get('test7');
-  $this->assertFalse(isset($fresh_cached->data->this_should_not_be_in_the_cache));
+    // Check that the cache key is case sensitive.
+    $backend->set('TEST8', 'value');
+    $this->assertEqual('value', $backend->get('TEST8')->data);
 
-  // Check with a long key.
-  $cid = str_repeat('a', 300);
-  $backend->set($cid, 'test');
-  $this->assertEqual('test', $backend->get($cid)->data);
+    // @todo, this assertion is commented out until an upstream issue is resolved.
+    // https://github.com/lcache/lcache/issues/42
+    // $this->assertFalse($backend->get('test8'), print_r($backend->get('test8'), TRUE));
 
-  // Check that the cache key is case sensitive.
-  $backend->set('TEST8', 'value');
-  $this->assertEqual('value', $backend->get('TEST8')->data);
-
-  // @todo, this assertion is commented out until an upstream issue is resolved.
-  // https://github.com/lcache/lcache/issues/42
-  // $this->assertFalse($backend->get('test8'), print_r($backend->get('test8'), TRUE));
-
-  // Calling ::set() with invalid cache tags. This should fail an assertion.
-  try {
-    $backend->set('assertion_test', 'value', Cache::PERMANENT, ['node' => [3, 5, 7]]);
-    $this->fail('::set() was called with invalid cache tags, runtime assertion did not fail.');
+    // Calling ::set() with invalid cache tags. This should fail an assertion.
+    try {
+      $backend->set('assertion_test', 'value', Cache::PERMANENT, ['node' => [3, 5, 7]]);
+      $this->fail('::set() was called with invalid cache tags, runtime assertion did not fail.');
+    }
+    catch (\AssertionError $e) {
+      $this->pass('::set() was called with invalid cache tags, runtime assertion failed.');
+    }
   }
-  catch (\AssertionError $e) {
-    $this->pass('::set() was called with invalid cache tags, runtime assertion failed.');
-  }
-}
 
   /**
    * Test Drupal\Core\Cache\CacheBackendInterface::invalidateAll().
@@ -238,13 +239,11 @@ public function testSetGet() {
     // $this->assertTrue($this->getCacheBackend($bin)->get('test_cid_invalidate1'), 'Cache items not matching tag were not invalidated.');
   }
 
-
-
   /**
    * Test Drupal\Core\Cache\CacheBackendInterface::invalidate() and
    * Drupal\Core\Cache\CacheBackendInterface::invalidateMultiple().
    */
-  function testInvalidate() {
+  public function testInvalidate() {
     $backend = $this->getCacheBackend();
     $backend->set('test1', 1);
     $backend->set('test2', 2);
@@ -270,10 +269,10 @@ public function testSetGet() {
     // @todo, this assertion is present in the parent class, currently fails.
     // LCache the treats invalidations the same as deletions.
     // https://github.com/lcache/lcache/issues/41
-    //$this->assertEqual(count($ret), 4, 'Four items returned.');
-
+    // $this->assertEqual(count($ret), 4, 'Four items returned.');
     // Calling invalidateMultiple() with an empty array should not cause an
     // error.
     $this->assertFalse($backend->invalidateMultiple(array()));
   }
+  // @codingStandardsIgnoreEnd
 }

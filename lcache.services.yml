@@ -4,7 +4,7 @@ services:
     arguments: ['@database']
   lcache.integrated:
     class: LCache\Integrated
-    factory: cache.backend.lcache:getIntegratedLCache
+    factory: cache.backend.lcache:getIntegratedLcache
   cache_tags.invalidator.lcache:
     class: Drupal\lcache\BackendInvalidator
     arguments: ['@lcache.integrated']
