@@ -7,7 +7,6 @@
 
 namespace Drupal\lcache;
 
-<<<<<<< HEAD
 use Drupal\Core\Database\Connection;
 
 /**
