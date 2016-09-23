@@ -26,7 +26,7 @@ composer require drupal/lcache
 
 ## Usage
 
-If you wish to use LCache as the default cache on your site, add this line to your `settings.php` file.
+First, enable LCache module. This will make LCache available. Next chose which cache bins you would like to be served from LCache. If you wish to use LCache as the default cache for on your site, add this line to your `settings.php` file.
 
 ```php
 $settings['cache']['default'] = 'cache.backend.lcache';
