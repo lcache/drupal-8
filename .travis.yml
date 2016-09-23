@@ -100,12 +100,14 @@ before_install:
   - composer global require drupal/coder:8.2.0-beta1
   - ln -s ~/.composer/vendor/drupal/coder/coder_sniffer/Drupal ~/.composer/vendor/squizlabs/php_codesniffer/CodeSniffer/Standards/
   - cd $DRUPAL_TI_DRUPAL_DIR && composer require "lcache/lcache"
+  # This command shouldn't be necessary. Just trying to resolve errors.
+  - cd /home/travis/build/lcache/drupal-8 && composer install
 
 install:
   - drupal-ti install
 
 before_script:
-#  - drupal-ti before_script
+  - drupal-ti before_script
 
 script:
   - drupal-ti --include .travis-phpcs.sh
