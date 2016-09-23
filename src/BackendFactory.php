@@ -13,7 +13,7 @@ class BackendFactory {
 
   protected $integrated;
 
-  protected function get_pdo_handle() {
+  protected function getPdoHandle() {
     $db_info = $this->connection->getConnectionOptions();
     $dsn = 'mysql:host=' . $db_info['host'] . ';port=' . $db_info['port'] . ';dbname=' . $db_info['database'];
     $options = array(\PDO::ATTR_TIMEOUT => 2, \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET sql_mode="ANSI_QUOTES,STRICT_ALL_TABLES"');
