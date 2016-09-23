@@ -7,6 +7,7 @@
 
 namespace Drupal\lcache;
 
+<<<<<<< HEAD
 use Drupal\Core\Database\Connection;
 
 /**
@@ -40,6 +41,7 @@ class BackendFactory {
     if (php_sapi_name() !== 'cli') {
       $l1 = new \LCache\APCuL1();
     }
+
     $l2 = new \LCache\DatabaseL2($this->getPdoHandle());
     $this->integrated = new \LCache\Integrated($l1, $l2);
     $this->integrated->synchronize();
@@ -57,7 +59,6 @@ class BackendFactory {
   public function get($bin) {
     return new Backend($bin, $this->integrated);
   }
-
   /**
    * Gets an LCache Backend for the specified cache bin.
    *
