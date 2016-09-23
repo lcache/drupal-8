@@ -37,3 +37,7 @@ LCache is most beneficial for read-heavy caches. You may want to only use LCache
 ```php
 $settings['cache']['bins']['render'] = 'cache.backend.lcache';
 ```
+
+## Feedback and collaboration
+
+Bug reports, feature requests, and feedback should be posted [in the drupal.org issue queue](https://www.drupal.org/project/issues/lcache). For code changes, please submit pull requests against [the GitHub repository](https://github.com/lcache/drupal-8) rather than posting patches to drupal.org.
