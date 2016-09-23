@@ -7,7 +7,6 @@
 
 namespace Drupal\lcache;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 
 /**
