@@ -1,4 +1,0 @@
-name = "LCache"
-description = "Provides a cache using APCu and the database."
-package = Performance
-core = 7.x
