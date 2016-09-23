@@ -72,6 +72,7 @@ class Backend implements CacheBackendInterface {
     if (is_null($entry->expiration)) {
       $entry->expiration = CacheBackendInterface::CACHE_PERMANENT;
     }
+    $response->expire = $entry->expiration;
     return $response;
   }
 
