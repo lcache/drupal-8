@@ -67,4 +67,23 @@ test:
     - ./vendor/bin/phpcs --report=full --extensions=php,module,inc,theme,info --standard=vendor/drupal/coder/coder_sniffer/Drupal/ --ignore=vendor .
     - cd $DOCROOT && /home/ubuntu/.phpenv/shims/php  core/scripts/run-tests.sh  --url  $SERVER  --module lcache    --php  /home/ubuntu/.phpenv/shims/php --verbose  --color
     
-
+deployment:
+  feature:
+    branch: 8.x-1.x
+    commands:
+      # Make sure the full history from GitHub is present. If it is not,
+      # the push to drupal.org will fail.
+      - git fetch --unshallow
+      - git remote add drupalorg stevector@git.drupal.org:project/lcache.git
+      - git fetch drupalorg
+      - git push  drupalorg $CIRCLE_BRANCH
+  release:
+    tag: /8.x-.*/
+    owner: lcache
+    commands:
+      # Make sure the full history from GitHub is present. If it is not,
+      # the push to drupal.org will fail.
+      - git fetch --unshallow
+      - git remote add drupalorg stevector@git.drupal.org:project/lcache.git
+      - git fetch drupalorg
+      - git push  drupalorg --tags
