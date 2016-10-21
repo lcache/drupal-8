@@ -90,11 +90,11 @@ class PerformanceHelpers implements Context, SnippetAcceptingContext {
 
     foreach ($post_urls as $post_url) {
       $this->minkContext->visit($post_url);
-      echo "\n";
-      echo $this->minkContext->getSession()->getPage()->find('css', 'h1.page-title')->getHtml();
-      echo "\n";
-      $this->minkContext->printCurrentUrl();
-      echo "\n";
+      //echo "\n";
+      //echo $this->minkContext->getSession()->getPage()->find('css', 'h1.page-title')->getHtml();
+      //echo "\n";
+      //$this->minkContext->printCurrentUrl();
+      //echo "\n";
       //print_r($this->minkContext->getSession()->getResponseHeaders());
     }
 
@@ -109,9 +109,9 @@ class PerformanceHelpers implements Context, SnippetAcceptingContext {
       $post_urls[] =$post_link->getAttribute('href');
     }
 
-    print_r("\n\n");
-    print_r($post_urls[0]);
-    print_r("\n\n");
+    //print_r("\n\n");
+    //print_r($post_urls[0]);
+    //print_r("\n\n");
     return $post_urls;
   }
 
