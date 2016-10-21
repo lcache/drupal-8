@@ -70,8 +70,8 @@ terminus site clear-cache
 # echo "\$settings['cache']['default'] = 'cache.backend.lcache';" >> sites/default/settings.php
 
 # Swap services for the bins otherwise using ChainedFastBackend
-echo "\$settings['cache']['bins']['bootstrap'] = 'cache.backend.lcache';" >> sites/default/settings.php
-#echo "\$settings['cache']['bins']['config']    = 'cache.backend.lcache';" >> sites/default/settings.php
+#echo "\$settings['cache']['bins']['bootstrap'] = 'cache.backend.lcache';" >> sites/default/settings.php
+echo "\$settings['cache']['bins']['config']    = 'cache.backend.lcache';" >> sites/default/settings.php
 #echo "\$settings['cache']['bins']['discovery'] = 'cache.backend.lcache';" >> sites/default/settings.php
 
 # Swap services for render, and dynamic page cache.
@@ -83,7 +83,7 @@ echo "\$settings['cache']['bins']['bootstrap'] = 'cache.backend.lcache';" >> sit
 # echo "\$settings['cache']['bins']['data']               = 'cache.backend.lcache';" >> sites/default/settings.php
 
 git add .
-git commit -m 'LCache for bootstrap bin'
+git commit -m 'LCache for config bin'
 git push origin $TERMINUS_ENV
 
 
