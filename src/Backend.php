@@ -72,7 +72,6 @@ class Backend implements CacheBackendInterface {
     if (is_null($entry->expiration)) {
       $entry->expiration = CacheBackendInterface::CACHE_PERMANENT;
     }
-
     $response->expire = $entry->expiration;
     return $response;
   }
@@ -81,9 +80,11 @@ class Backend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function getMultiple(&$cids, $allow_invalid = FALSE) {
+
     if (empty($cids)) {
       return;
     }
+
     $cache = array();
     foreach ($cids as $cid) {
       $c = $this->get($cid);
@@ -91,6 +92,7 @@ class Backend implements CacheBackendInterface {
         $cache[$cid] = $c;
       }
     }
+
     $cids = array_diff($cids, array_keys($cache));
     return $cache;
   }

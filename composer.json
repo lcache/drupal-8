@@ -10,10 +10,18 @@
         }
     ],
     "require": {
-        "lcache/lcache": "v0.3.*"
+        "lcache/lcache": "0.3.*"
     },
     "require-dev": {
+        "phpunit/phpunit": "4.*",
+        "phpunit/dbunit": "*",
         "drupal/coder": "^8.2.0-beta1",
-        "squizlabs/php_codesniffer": "2.0.*@dev"
-    }
+        "squizlabs/php_codesniffer": "2.0.*@dev",
+        "drush-ops/behat-drush-endpoint": "*",
+        "drupal/drupal-extension": "dev-master",
+        "drupal/drupal-driver": "dev-master"
+    },
+    "autoload": {
+        "psr-4": { "Drupal\\LCache\\Behat\\": "tests/behat/bootstrap/" }
+  }
 }
