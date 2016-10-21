@@ -41,7 +41,7 @@ class BackendFactory {
       $l1 = new \LCache\APCuL1();
     }
     $l2 = new \LCache\DatabaseL2($this->getPdoHandle());
-    $this->integrated = new \LCache\Integrated($l1, $l2);
+    $this->integrated = new \LCache\Integrated($l1, $l2, 100);
     $this->integrated->synchronize();
   }
 
