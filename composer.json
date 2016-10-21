@@ -20,5 +20,8 @@
         "drush-ops/behat-drush-endpoint": "*",
         "drupal/drupal-extension": "dev-master",
         "drupal/drupal-driver": "dev-master"
-    }
+    },
+    "autoload": {
+        "psr-4": { "Drupal\\LCache\\Behat\\": "tests/behat/bootstrap/" }
+  }
 }
