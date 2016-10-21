@@ -30,6 +30,7 @@ class Backend implements CacheBackendInterface {
 
   /**
    * Constructs a Backend object.
+   *
    * @param string $bin
    *   The bin name.
    */
@@ -38,6 +39,12 @@ class Backend implements CacheBackendInterface {
     $this->integrated = $integrated;
   }
 
+  /**
+   * Return an Address for a given cid.
+   *
+   * @param string $cid
+   *   The Cache ID.
+   */
   protected function getAddress($cid) {
     return new \LCache\Address($this->bin, $cid);
   }
@@ -55,8 +62,16 @@ class Backend implements CacheBackendInterface {
 
     $response = new \stdClass();
     $response->cid = $cid;
+    $response->valid = TRUE;
     $response->data = $entry->value;
     $response->created = $entry->created;
+
+    // LCache the library uses NULL for permanent
+    // but that may confuse parts of Drupal.
+    // @todo, investigate if there is a better answer than this munging.
+    if (is_null($entry->expiration)) {
+      $entry->expiration = CacheBackendInterface::CACHE_PERMANENT;
+    }
     $response->expire = $entry->expiration;
     return $response;
   }
@@ -65,7 +80,11 @@ class Backend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function getMultiple(&$cids, $allow_invalid = FALSE) {
-    if (empty($cids)) return;
+
+    if (empty($cids)) {
+      return;
+    }
+
     $cache = array();
     foreach ($cids as $cid) {
       $c = $this->get($cid);
@@ -73,6 +92,8 @@ class Backend implements CacheBackendInterface {
         $cache[$cid] = $c;
       }
     }
+
+    $cids = array_diff($cids, array_keys($cache));
     return $cache;
   }
 
@@ -167,15 +188,6 @@ class Backend implements CacheBackendInterface {
   /**
    * {@inheritdoc}
    */
-  public function invalidateTags(array $tags) {
-    foreach ($tags as $tag) {
-      $this->integrated->deleteTag($tag);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function removeBin() {
     $this->invalidateAll();
   }
@@ -188,7 +200,7 @@ class Backend implements CacheBackendInterface {
   }
 
   /**
-   * (@inheritdoc)
+   * {@inheritdoc}
    */
   public function isEmpty() {
     return FALSE;

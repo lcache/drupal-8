@@ -1,4 +1,4 @@
-/composer.lock
-/vendor
-/drush
-
+composer.lock
+/drush/
+/vendor/
+.DS_Store

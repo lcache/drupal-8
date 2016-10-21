@@ -9,13 +9,19 @@ namespace Drupal\lcache;
 
 use Drupal\Core\Database\Connection;
 
+/**
+ * A Factory for an LCache backend.
+ */
 class BackendFactory {
 
   protected $integrated;
 
-  protected function get_pdo_handle() {
+  /**
+   * Constructs the the databse connection for L2.
+   */
+  protected function getPdoHandle() {
     $db_info = $this->connection->getConnectionOptions();
-    $dsn = 'mysql:host='. $db_info['host']. ';port='. $db_info['port'] .';dbname='. $db_info['database'];
+    $dsn = 'mysql:host=' . $db_info['host'] . ';port=' . $db_info['port'] . ';dbname=' . $db_info['database'];
     $options = array(\PDO::ATTR_TIMEOUT => 2, \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET sql_mode="ANSI_QUOTES,STRICT_ALL_TABLES"');
     $dbh = new \PDO($dsn, $db_info['username'], $db_info['password'], $options);
     $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
@@ -34,7 +40,7 @@ class BackendFactory {
     if (php_sapi_name() !== 'cli') {
       $l1 = new \LCache\APCuL1();
     }
-    $l2 = new \LCache\DatabaseL2($this->get_pdo_handle());
+    $l2 = new \LCache\DatabaseL2($this->getPdoHandle());
     $this->integrated = new \LCache\Integrated($l1, $l2);
     $this->integrated->synchronize();
   }
@@ -42,7 +48,7 @@ class BackendFactory {
   /**
    * Gets an LCache Backend for the specified cache bin.
    *
-   * @param $bin
+   * @param string $bin
    *   The cache bin for which the object is created.
    *
    * @return \Drupal\lcache\Backend
@@ -58,8 +64,7 @@ class BackendFactory {
    * @return \LCache\Integrated
    *   The integrated cache backend.
    */
-  public function getIntegratedLCache() {
+  public function getIntegratedLcache() {
     return $this->integrated;
   }
-
 }
