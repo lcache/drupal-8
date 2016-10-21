@@ -2,7 +2,6 @@
 
 namespace Drupal\LCache\Behat;
 
-
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\MinkExtension\Context\MinkContext;
@@ -54,7 +53,6 @@ class PerformanceHelpers implements Context, SnippetAcceptingContext {
 
     $this->minkContext->visit("/");
 
-
     $next_page_exists = TRUE;
     $next_page_url ='';
 
@@ -63,9 +61,6 @@ class PerformanceHelpers implements Context, SnippetAcceptingContext {
       $page = $this->minkContext->getSession()->getPage();
       $next_page_link = $page->find('css', '.pager__item--next a');
       //echo $this->minkContext->getSession()->getPage()->find('css', '.pager__items')->getHtml();
-
-
-
       if ($next_page_link) {
         $next_page_url = $next_page_link->getAttribute('href');
       }
@@ -91,14 +86,10 @@ class PerformanceHelpers implements Context, SnippetAcceptingContext {
 
   protected function openAllPostLinksOnASinglePage($page) {
 
-
-
     $post_urls = $this->getAllPostURLs($page);
 
     foreach ($post_urls as $post_url) {
-
       $this->minkContext->visit($post_url);
-
       echo "\n";
       echo $this->minkContext->getSession()->getPage()->find('css', 'h1.page-title')->getHtml();
       echo "\n";
@@ -108,8 +99,6 @@ class PerformanceHelpers implements Context, SnippetAcceptingContext {
     }
 
   }
-
-
 
   protected function getAllPostURLs($page) {
 
@@ -125,8 +114,6 @@ class PerformanceHelpers implements Context, SnippetAcceptingContext {
     print_r("\n\n");
     return $post_urls;
   }
-
-
 
   /**
    * @Given I log in as an admin
