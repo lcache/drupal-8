@@ -7,6 +7,7 @@
 
 namespace Drupal\lcache;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Cache\CacheBackendInterface;
 
 /**
@@ -46,6 +47,7 @@ class Backend implements CacheBackendInterface {
    *   The Cache ID.
    */
   protected function getAddress($cid) {
+    $cid = $this->normalizeCid($cid);
     return new \LCache\Address($this->bin, $cid);
   }
 
@@ -53,6 +55,7 @@ class Backend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function get($cid, $allow_invalid = FALSE) {
+    $cid = $this->normalizeCid($cid);
     $address = $this->getAddress($cid);
     $entry = $this->integrated->getEntry($address);
 
@@ -99,6 +102,7 @@ class Backend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array()) {
+    $cid = $this->normalizeCid($cid);
     assert('\Drupal\Component\Assertion\Inspector::assertAllStrings($tags)');
     $tags = array_unique($tags);
     // Sort the cache tags so that they are stored consistently.
@@ -129,6 +133,7 @@ class Backend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function delete($cid) {
+    $cid = $this->normalizeCid($cid);
     $address = $this->getAddress($cid);
     $this->integrated->delete($address);
   }
@@ -138,6 +143,7 @@ class Backend implements CacheBackendInterface {
    */
   public function deleteMultiple(array $cids) {
     foreach ($cids as $cid) {
+      $cid = $this->normalizeCid($cid);
       $this->delete($cid);
     }
   }
@@ -153,6 +159,7 @@ class Backend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function invalidate($cid) {
+    $cid = $this->normalizeCid($cid);
     $this->delete($cid);
   }
 
@@ -172,6 +179,7 @@ class Backend implements CacheBackendInterface {
    */
   public function invalidateMultiple(array $cids) {
     foreach ($cids as $cid) {
+      $cid = $this->normalizeCid($cid);
       $this->invalidate($cid);
     }
   }
@@ -202,5 +210,36 @@ class Backend implements CacheBackendInterface {
    */
   public function isEmpty() {
     return FALSE;
+  }
+
+  /**
+   * Normalizes a cache ID in order to comply with database limitations.
+   *
+   * @param string $cid
+   *   The passed in cache ID.
+   *
+   * @return string
+   *   An ASCII-encoded cache ID that is limited in length.
+   */
+  protected function normalizeCid($cid) {
+    $cid_is_ascii = mb_check_encoding($cid, 'ASCII');
+
+    // 508 is the max length of the address column (512) minus
+    // the number of characters that will be added to the stored address value
+    // by Address::serialze() when the bin length is long (two digits).
+    $max_cid_length = 508 - strlen($this->bin);
+    if (strlen($cid) <= $max_cid_length && $cid_is_ascii) {
+      return $cid;
+    }
+
+    // Return a string that uses as much as possible of the original cache ID
+    // with the hash appended.
+    // Cut the hash in half to allow for more storage of the real cid's length
+    // to be stored.
+    $hash = substr(hash('sha512', $cid), 0, 64);
+    if (!$cid_is_ascii) {
+      return $hash;
+    }
+    return substr($cid, 0, $max_cid_length - strlen($hash)) . $hash;
   }
 }
