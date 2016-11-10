@@ -7,7 +7,6 @@
 
 namespace Drupal\lcache;
 
-use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Cache\CacheBackendInterface;
 
 /**
