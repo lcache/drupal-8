@@ -54,7 +54,6 @@ class Backend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function get($cid, $allow_invalid = FALSE) {
-    $cid = $this->normalizeCid($cid);
     $address = $this->getAddress($cid);
     $entry = $this->integrated->getEntry($address);
 
@@ -101,7 +100,6 @@ class Backend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array()) {
-    $cid = $this->normalizeCid($cid);
     assert('\Drupal\Component\Assertion\Inspector::assertAllStrings($tags)');
     $tags = array_unique($tags);
     // Sort the cache tags so that they are stored consistently.
@@ -132,7 +130,6 @@ class Backend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function delete($cid) {
-    $cid = $this->normalizeCid($cid);
     $address = $this->getAddress($cid);
     $this->integrated->delete($address);
   }
@@ -142,7 +139,6 @@ class Backend implements CacheBackendInterface {
    */
   public function deleteMultiple(array $cids) {
     foreach ($cids as $cid) {
-      $cid = $this->normalizeCid($cid);
       $this->delete($cid);
     }
   }
@@ -158,7 +154,6 @@ class Backend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function invalidate($cid) {
-    $cid = $this->normalizeCid($cid);
     $this->delete($cid);
   }
 
@@ -178,7 +173,6 @@ class Backend implements CacheBackendInterface {
    */
   public function invalidateMultiple(array $cids) {
     foreach ($cids as $cid) {
-      $cid = $this->normalizeCid($cid);
       $this->invalidate($cid);
     }
   }
