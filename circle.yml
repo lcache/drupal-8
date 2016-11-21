@@ -22,8 +22,8 @@ dependencies:
     - composer global require "hirak/prestissimo:^0.3"
     - composer global require drush/drush:8.*
     # @todo, composer is probably a bad/slow way to install core here.
-    # Use something like drush's 
-    - git clone --branch 8.1.x https://git.drupal.org/project/drupal.git $DOCROOT
+    # Use something like drush's
+    - git clone --branch 8.2.x https://git.drupal.org/project/drupal.git $DOCROOT
     - cd $DOCROOT && composer install
     # Add apache config.
     # Modify user to make sure that there will be no permission issues.
@@ -66,7 +66,7 @@ test:
   override:
     - ./vendor/bin/phpcs --report=full --extensions=php,module,inc,theme,info --standard=vendor/drupal/coder/coder_sniffer/Drupal/ --ignore=vendor .
     - cd $DOCROOT && /home/ubuntu/.phpenv/shims/php  core/scripts/run-tests.sh  --url  $SERVER  --module lcache    --php  /home/ubuntu/.phpenv/shims/php --verbose  --color
-    
+
 deployment:
   feature:
     branch: 8.x-1.x
